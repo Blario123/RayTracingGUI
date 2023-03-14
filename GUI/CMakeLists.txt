@@ -8,9 +8,10 @@ find_package(Qt6 COMPONENTS
         Core
         Gui
         Widgets
-        OpenGL
         OpenGLWidgets
         REQUIRED)
+
+add_subdirectory(RayTraceGL)
 
 set(SRC
         gui.cpp
@@ -40,4 +41,4 @@ include_directories(../ray-tracer/include)
 
 add_library(GUI ${SRC} ${HDR})
 
-target_link_libraries(GUI Qt::Core Qt::Gui Qt::Widgets Qt::OpenGL Qt::OpenGLWidgets)
+target_link_libraries(GUI Qt::Core Qt::Gui Qt::Widgets Qt::OpenGL Qt::OpenGLWidgets RayTraceGL)
