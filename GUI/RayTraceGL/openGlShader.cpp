@@ -16,12 +16,20 @@ void OpenGLShader::drawElements(OpenGLVertexArray &va, OpenGLVertexBuffer &vb, O
     va.bind();
     vb.bind();
     glm::vec3 color = glm::vec3(1.0, 0.0, 1.0);
-    glUniform3fv(glGetUniformLocation(program->programId(), "aColor"), 1, glm::value_ptr(color));
-    glUniformMatrix4fv(glGetUniformLocation(program->programId(), "projection"), 1, GL_FALSE, glm::value_ptr(projection[0]));
-    glUniformMatrix4fv(glGetUniformLocation(program->programId(), "view"), 1, GL_FALSE, glm::value_ptr(view[0]));
-    glUniformMatrix4fv(glGetUniformLocation(program->programId(), "model"), 1, GL_FALSE, glm::value_ptr(model[0]));
-    glUniform3fv(glGetUniformLocation(program->programId(), "lightPos"), 1, glm::value_ptr(lightPos));
-    glUniform3fv(glGetUniformLocation(program->programId(), "cameraPos"), 1, glm::value_ptr(cameraPos));
+    setVec3("aColor", color);
+    setMat4("projection", projection);
+    setMat4("view", view);
+    setMat4("model", model);
+    setVec3("lightPos", lightPos);
+    setVec3("cameraPos", cameraPos);
     eb.bind();
     glDrawElements(GL_TRIANGLES, (GLsizei) eb.mCount, GL_UNSIGNED_INT, nullptr);
+}
+
+void OpenGLShader::setVec3(const std::string &name, const glm::vec3 &v) {
+    glUniform3fv(glGetUniformLocation(program->programId(), name.c_str()), 1, glm::value_ptr(v));
+}
+
+void OpenGLShader::setMat4(const std::string &name, const glm::mat4 &v) {
+    glUniformMatrix4fv(glGetUniformLocation(program->programId(), name.c_str()), 1, GL_FALSE, glm::value_ptr(v));
 }

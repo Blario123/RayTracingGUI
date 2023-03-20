@@ -3,6 +3,7 @@
 
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions_3_3_Core>
+#include <QElapsedTimer>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -22,6 +23,7 @@ protected:
     void resizeGL(int, int) override;
     void keyPressEvent(QKeyEvent *) override;
 private:
+    QElapsedTimer eTimer;
     OpenGLShader shader;
     QList<QSharedPointer<OpenGLItem>> items;
     // VertexArray
