@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include <QOpenGLFunctions_3_3_Core>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -11,18 +13,18 @@
 #include "openGlVertexBuffer.h"
 #include "openGlElementBuffer.h"
 
-class OpenGLItem {
+class OpenGLItem : protected QOpenGLFunctions_3_3_Core {
 public:
     explicit OpenGLItem();
     OpenGLVertexArray va;
     OpenGLVertexBuffer vb;
     OpenGLElementBuffer eb;
-
+    void init();
 };
 
 class OpenGLItemSphere : public OpenGLItem {
 public:
-    explicit OpenGLItemSphere(double radius);
+    explicit OpenGLItemSphere(double radius = 1.0);
 };
 
 class OpenGLItemTorus : public OpenGLItem {

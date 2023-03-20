@@ -1,11 +1,11 @@
 #ifndef OPENGLVERTEXARRAY_H
 #define OPENGLVERTEXARRAY_H
 
-#include <QOpenGLFunctions_4_5_Core>
+#include <QOpenGLFunctions_3_3_Core>
 
 #include "openGlVertexBuffer.h"
 
-class OpenGLVertexArray : protected QOpenGLFunctions_4_5_Core {
+class OpenGLVertexArray : protected QOpenGLFunctions_3_3_Core {
 public:
     explicit OpenGLVertexArray();
     ~OpenGLVertexArray() override;

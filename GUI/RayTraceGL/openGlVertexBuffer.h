@@ -1,9 +1,9 @@
 #ifndef OPENGLVERTEXBUFFER_H
 #define OPENGLVERTEXBUFFER_H
 
-#include <QOpenGLFunctions_4_5_Core>
+#include <QOpenGLFunctions_3_3_Core>
 
-class OpenGLVertexBuffer : protected QOpenGLFunctions_4_5_Core {
+class OpenGLVertexBuffer : protected QOpenGLFunctions_3_3_Core {
 public:
     explicit OpenGLVertexBuffer();
     ~OpenGLVertexBuffer() override;

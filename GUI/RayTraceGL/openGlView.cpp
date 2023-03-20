@@ -6,10 +6,14 @@ OpenGLView::OpenGLView(QWidget *parent) : QOpenGLWidget(parent) {
 }
 
 void OpenGLView::initializeGL() {
+    makeCurrent();
     initializeOpenGLFunctions();
     shader.init();
     glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, 800, 800);
+
+    QSharedPointer<OpenGLItem> sphere(new OpenGLItemSphere());
+    items.push_back(sphere);
 }
 
 void OpenGLView::paintGL() {
@@ -22,7 +26,7 @@ void OpenGLView::paintGL() {
     glm::vec3 lightPos(20.0, 20.0, -10);
     glm::vec3 cameraPos(0.0);
 
-    for(auto i: items) {
+    for(auto &i: items) {
         shader.drawElements(i->va, i->vb, i->eb, projection, view, model, lightPos, cameraPos);
     }
 

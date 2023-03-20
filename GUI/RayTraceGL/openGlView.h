@@ -2,7 +2,7 @@
 #define OPENGLVIEW_H
 
 #include <QOpenGLWidget>
-#include <QOpenGLFunctions_4_5_Core>
+#include <QOpenGLFunctions_3_3_Core>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -11,7 +11,7 @@
 #include "openGlShader.h"
 #include "openGlItem.h"
 
-class OpenGLView : public QOpenGLWidget, protected QOpenGLFunctions_4_5_Core {
+class OpenGLView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     Q_OBJECT
 public:
     explicit OpenGLView(QWidget *parent = nullptr);
@@ -23,7 +23,7 @@ protected:
     void keyPressEvent(QKeyEvent *) override;
 private:
     OpenGLShader shader;
-    std::vector<OpenGLItem*> items;
+    QList<QSharedPointer<OpenGLItem>> items;
     // VertexArray
     // VertexBuffer
     // ElementBuffer
