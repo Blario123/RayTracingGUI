@@ -19,7 +19,11 @@ public:
     OpenGLVertexArray va;
     OpenGLVertexBuffer vb;
     OpenGLElementBuffer eb;
-    void init();
+    glm::vec3 color;
+public slots:
+    void setColor(const glm::vec3 &);
+private:
+    glm::vec3 pos;
 };
 
 class OpenGLItemSphere : public OpenGLItem {
@@ -34,7 +38,7 @@ public:
 
 class OpenGLItemCuboid : public OpenGLItem {
 public:
-    explicit OpenGLItemCuboid(glm::vec3 dimensions);
+    explicit OpenGLItemCuboid(glm::vec3 pos, glm::vec3 dimensions);
 };
 
 class OpenGLItemReuleaux : public OpenGLItem {

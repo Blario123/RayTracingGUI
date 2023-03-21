@@ -16,7 +16,7 @@ class OpenGLShader : protected QOpenGLFunctions_3_3_Core {
 public:
     explicit OpenGLShader();
     void init();
-    void drawElements(OpenGLVertexArray &va, OpenGLVertexBuffer &vb, OpenGLElementBuffer &eb, glm::mat4 projection, glm::mat4 view, glm::mat4 model, glm::vec3 lightPos, glm::vec3 cameraPos);
+    void drawElements(OpenGLVertexArray &va, OpenGLVertexBuffer &vb, OpenGLElementBuffer &eb, glm::vec3 color, glm::mat4 projection, glm::mat4 view, glm::mat4 model, glm::vec3 lightPos, glm::vec3 cameraPos);
 private:
     QOpenGLShaderProgram *program;
     void setVec3(const std::string &, const glm::vec3 &);

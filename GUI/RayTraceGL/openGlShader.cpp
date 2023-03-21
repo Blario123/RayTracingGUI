@@ -11,11 +11,10 @@ void OpenGLShader::init() {
     program->link();
 }
 
-void OpenGLShader::drawElements(OpenGLVertexArray &va, OpenGLVertexBuffer &vb, OpenGLElementBuffer &eb, glm::mat4 projection, glm::mat4 view, glm::mat4 model, glm::vec3 lightPos, glm::vec3 cameraPos) {
+void OpenGLShader::drawElements(OpenGLVertexArray &va, OpenGLVertexBuffer &vb, OpenGLElementBuffer &eb, glm::vec3 color, glm::mat4 projection, glm::mat4 view, glm::mat4 model, glm::vec3 lightPos, glm::vec3 cameraPos) {
     program->bind();
     va.bind();
     vb.bind();
-    glm::vec3 color = glm::vec3(1.0, 0.0, 1.0);
     setVec3("aColor", color);
     setMat4("projection", projection);
     setMat4("view", view);

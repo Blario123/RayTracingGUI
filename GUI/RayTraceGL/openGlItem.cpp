@@ -1,23 +1,33 @@
 #include "openGlItem.h"
 
 OpenGLItem::OpenGLItem() {
-    // initializeOpenGLFunctions();
+
 }
 
+void OpenGLItem::setColor(const glm::vec3 &c) {
+    color = c;
+}
 
-void OpenGLItem::init() {
+OpenGLItemSphere::OpenGLItemSphere(double radius) {
+
+}
+
+OpenGLItemTorus::OpenGLItemTorus(double innerRadius, double outerRadius) {
+
+}
+
+OpenGLItemCuboid::OpenGLItemCuboid(glm::vec3 pos, glm::vec3 dimensions) {
     va.init();
     va.bind();
-    glm::vec3 size(1.0, 1.0, 1.0);
     std::vector<float> vertices = {
-        0.0, 0.0, 0.0,
-        size.x, 0.0, 0.0,
-        size.x, size.y, 0.0,
-        0.0, size.y, 0,
-        0.0, 0.0, size.z,
-        size.x, 0.0, size.z,
-        size.x, size.y, size.z,
-        0.0, size.y, size.z
+        pos.x,                  pos.y,                  pos.z,
+        pos.x + dimensions.x,   pos.y,                  pos.z,
+        pos.x + dimensions.x,   pos.y + dimensions.y,   pos.z,
+        pos.x,                  pos.y + dimensions.y,   pos.z,
+        pos.x,                  pos.y,                  pos.z + dimensions.z,
+        pos.x + dimensions.x,   pos.y,                  pos.z + dimensions.z,
+        pos.x + dimensions.x,   pos.y + dimensions.y,   pos.z + dimensions.z,
+        pos.x,                  pos.y + dimensions.y,   pos.z + dimensions.z
     };
 
     std::vector<uint> indices = {
@@ -37,18 +47,6 @@ void OpenGLItem::init() {
     vb.init(vertices);
     eb.init(indices);
     va.addBuffer(vb);
-}
-
-OpenGLItemSphere::OpenGLItemSphere(double radius) {
-    init();
-}
-
-OpenGLItemTorus::OpenGLItemTorus(double innerRadius, double outerRadius) {
-
-}
-
-OpenGLItemCuboid::OpenGLItemCuboid(glm::vec3 dimensions) {
-
 }
 
 OpenGLItemReuleaux::OpenGLItemReuleaux(double sideLength) {
