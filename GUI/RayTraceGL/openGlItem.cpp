@@ -8,6 +8,10 @@ void OpenGLItem::setColor(const glm::vec3 &c) {
     color = c;
 }
 
+void OpenGLItem::setPosition(const glm::vec3 &pos) {
+    mPos = pos;
+}
+
 OpenGLItemSphere::OpenGLItemSphere(double radius) {
 
 }
@@ -17,18 +21,11 @@ OpenGLItemTorus::OpenGLItemTorus(double innerRadius, double outerRadius) {
 }
 
 OpenGLItemCuboid::OpenGLItemCuboid(glm::vec3 pos, glm::vec3 dimensions) {
+    mPos = pos;
+    mDimensions = dimensions;
     va.init();
     va.bind();
-    std::vector<float> vertices = {
-        pos.x,                  pos.y,                  pos.z,
-        pos.x + dimensions.x,   pos.y,                  pos.z,
-        pos.x + dimensions.x,   pos.y + dimensions.y,   pos.z,
-        pos.x,                  pos.y + dimensions.y,   pos.z,
-        pos.x,                  pos.y,                  pos.z + dimensions.z,
-        pos.x + dimensions.x,   pos.y,                  pos.z + dimensions.z,
-        pos.x + dimensions.x,   pos.y + dimensions.y,   pos.z + dimensions.z,
-        pos.x,                  pos.y + dimensions.y,   pos.z + dimensions.z
-    };
+    createVertices();
 
     std::vector<uint> indices = {
         0, 1, 2,
@@ -46,6 +43,26 @@ OpenGLItemCuboid::OpenGLItemCuboid(glm::vec3 pos, glm::vec3 dimensions) {
     };
     vb.init(vertices);
     eb.init(indices);
+    va.addBuffer(vb);
+}
+
+void OpenGLItemCuboid::setPosition(const glm::vec3 &pos) {
+    mPos = pos;
+    createVertices();
+}
+
+void OpenGLItemCuboid::createVertices() {
+    vertices = {
+        mPos.x,                 mPos.y,                  mPos.z,
+        mPos.x + mDimensions.x, mPos.y,                  mPos.z,
+        mPos.x + mDimensions.x, mPos.y + mDimensions.y,  mPos.z,
+        mPos.x,                 mPos.y + mDimensions.y,  mPos.z,
+        mPos.x,                 mPos.y,                  mPos.z + mDimensions.z,
+        mPos.x + mDimensions.x, mPos.y,                  mPos.z + mDimensions.z,
+        mPos.x + mDimensions.x, mPos.y + mDimensions.y,  mPos.z + mDimensions.z,
+        mPos.x,                 mPos.y + mDimensions.y,  mPos.z + mDimensions.z
+    };
+    vb.init(vertices);
     va.addBuffer(vb);
 }
 

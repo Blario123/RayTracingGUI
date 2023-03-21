@@ -20,8 +20,10 @@ public:
     OpenGLVertexBuffer vb;
     OpenGLElementBuffer eb;
     glm::vec3 color;
+    glm::vec3 mPos;
 public slots:
     void setColor(const glm::vec3 &);
+    virtual void setPosition(const glm::vec3 &);
 private:
     glm::vec3 pos;
 };
@@ -39,6 +41,12 @@ public:
 class OpenGLItemCuboid : public OpenGLItem {
 public:
     explicit OpenGLItemCuboid(glm::vec3 pos, glm::vec3 dimensions);
+public slots:
+    void setPosition(const glm::vec3 &) override;
+private:
+    void createVertices();
+    std::vector<float> vertices;
+    glm::vec3 mDimensions;
 };
 
 class OpenGLItemReuleaux : public OpenGLItem {
