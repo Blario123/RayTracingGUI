@@ -18,3 +18,8 @@ void OpenGLVertexBuffer::init(const std::vector<float> &v) {
 void OpenGLVertexBuffer::bind() {
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 }
+
+void OpenGLVertexBuffer::update(const std::vector<float> &v) {
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<long>(v.size() * sizeof(float)), &v.front(), GL_STATIC_DRAW);
+}

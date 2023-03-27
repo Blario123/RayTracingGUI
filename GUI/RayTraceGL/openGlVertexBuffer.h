@@ -9,6 +9,7 @@ public:
     ~OpenGLVertexBuffer() override;
     void init(const std::vector<float> &);
     void bind();
+    void update(const std::vector<float> &);
 private:
     GLuint vbo;
 };

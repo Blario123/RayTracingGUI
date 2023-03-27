@@ -20,12 +20,11 @@ public:
     OpenGLVertexBuffer vb;
     OpenGLElementBuffer eb;
     glm::vec3 color;
-    glm::vec3 mPos;
 public slots:
     void setColor(const glm::vec3 &);
     virtual void setPosition(const glm::vec3 &);
-private:
-    glm::vec3 pos;
+protected:
+    glm::vec3 mPos;
 };
 
 class OpenGLItemSphere : public OpenGLItem {
@@ -43,6 +42,7 @@ public:
     explicit OpenGLItemCuboid(glm::vec3 pos, glm::vec3 dimensions);
 public slots:
     void setPosition(const glm::vec3 &) override;
+    void setDimensions(const glm::vec3 &);
 private:
     void createVertices();
     std::vector<float> vertices;

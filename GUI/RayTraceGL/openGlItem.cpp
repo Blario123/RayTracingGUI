@@ -42,13 +42,20 @@ OpenGLItemCuboid::OpenGLItemCuboid(glm::vec3 pos, glm::vec3 dimensions) {
         2, 6, 7
     };
     vb.init(vertices);
-    eb.init(indices);
     va.addBuffer(vb);
+    eb.init(indices);
 }
 
 void OpenGLItemCuboid::setPosition(const glm::vec3 &pos) {
     mPos = pos;
     createVertices();
+    vb.update(vertices);
+}
+
+void OpenGLItemCuboid::setDimensions(const glm::vec3 &dim) {
+    mDimensions = dim;
+    createVertices();
+    vb.update(vertices);
 }
 
 void OpenGLItemCuboid::createVertices() {
@@ -62,8 +69,6 @@ void OpenGLItemCuboid::createVertices() {
         mPos.x + mDimensions.x, mPos.y + mDimensions.y,  mPos.z + mDimensions.z,
         mPos.x,                 mPos.y + mDimensions.y,  mPos.z + mDimensions.z
     };
-    vb.init(vertices);
-    va.addBuffer(vb);
 }
 
 OpenGLItemReuleaux::OpenGLItemReuleaux(double sideLength) {
