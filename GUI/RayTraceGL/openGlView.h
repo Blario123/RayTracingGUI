@@ -25,7 +25,9 @@ protected:
     void keyPressEvent(QKeyEvent *) override;
 public slots:
     void setDimensions(const glm::vec3 &);
+    void setFov(double);
 private:
+    double mFov;
     QElapsedTimer eTimer;
     OpenGLShader shader;
     QList<QSharedPointer<OpenGLItem>> scene;
