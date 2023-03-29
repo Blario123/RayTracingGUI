@@ -21,8 +21,11 @@ void OpenGLView::initializeGL() {
 
     QSharedPointer<OpenGLItem> cube(new OpenGLItemCuboid(glm::vec3(0.1, 0.1, 0.0),
                                                          glm::vec3(0.2)));
+    QSharedPointer<OpenGLItem> sphere(new OpenGLItemSphere(glm::vec3(0.5)));
     cube->setColor(glm::vec3(1.0, 0.0, 0.0));
+    sphere->setColor(glm::vec3(1.0, 0.0, 1.0));
     items.push_back(cube);
+    items.push_back(sphere);
 }
 
 void OpenGLView::paintGL() {

@@ -12,8 +12,39 @@ void OpenGLItem::setPosition(const glm::vec3 &pos) {
     mPos = pos;
 }
 
-OpenGLItemSphere::OpenGLItemSphere(double radius) {
+OpenGLItemSphere::OpenGLItemSphere(const glm::vec3 &pos, float radius) {
+    mPos = pos;
+    mRadius = radius;
 
+    va.init();
+    va.bind();
+
+    createVertices();
+
+    vb.init(vertices);
+    va.addBuffer(vb);
+    eb.init(indices);
+}
+
+void OpenGLItemSphere::createVertices() {
+    vertices.clear();
+    for(int i = 1; i < mResolution + 1; i++) {
+        const double loopAngle = (2 * M_PI) / (mResolution + 1);
+        double prevAngle = (i - 1) * loopAngle;
+        double angle = i * loopAngle;
+        vertices.insert(vertices.end(), {0.0, 0.0, mRadius});
+        printf("%f,%f,", mRadius * sin(prevAngle), mRadius * cos(prevAngle));
+        printf("%f\n", 0.0);
+        for(int j = 1; j < (mResolution / 2) + 1; j++) {
+            const double loopAngleVert = (2 * M_PI) / (mResolution + 1);
+            double angleVert = j * loopAngleVert;
+            printf("%f,%f,", mRadius * sin(prevAngle), mRadius * cos(prevAngle));
+            printf("%f\n", mRadius * sin(angleVert));
+        }
+        printf("%f,%f,", mRadius * sin(prevAngle), mRadius * cos(prevAngle));
+        printf("%f\n", 0.0);
+        vertices.insert(vertices.end(), {0.0, 0.0, -mRadius});
+    }
 }
 
 OpenGLItemTorus::OpenGLItemTorus(double innerRadius, double outerRadius) {
@@ -27,7 +58,7 @@ OpenGLItemCuboid::OpenGLItemCuboid(glm::vec3 pos, glm::vec3 dimensions) {
     va.bind();
     createVertices();
 
-    std::vector<uint> indices = {
+    indices = {
         0, 1, 2,
         2, 3, 0,
         0, 3, 4,

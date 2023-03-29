@@ -25,11 +25,17 @@ public slots:
     virtual void setPosition(const glm::vec3 &);
 protected:
     glm::vec3 mPos;
+    std::vector<float> vertices;
+    std::vector<uint> indices;
 };
 
 class OpenGLItemSphere : public OpenGLItem {
 public:
-    explicit OpenGLItemSphere(double radius = 1.0);
+    explicit OpenGLItemSphere(const glm::vec3 &, float radius = 1.0);
+private:
+    void createVertices();
+    float mRadius;
+    int mResolution = 20;
 };
 
 class OpenGLItemTorus : public OpenGLItem {
@@ -45,7 +51,6 @@ public slots:
     void setDimensions(const glm::vec3 &);
 private:
     void createVertices();
-    std::vector<float> vertices;
     glm::vec3 mDimensions;
 };
 
