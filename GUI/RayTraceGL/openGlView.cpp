@@ -4,7 +4,8 @@ OpenGLView::OpenGLView(QWidget *parent) : QOpenGLWidget(parent) {
     Q_INIT_RESOURCE(openGlResources);
     setFocusPolicy(Qt::StrongFocus);
     eTimer.start();
-    setFixedSize(1920, 1080);
+    // setFixedSize(1920, 1080);
+    // setFixedSize(1920, 1080);
 }
 
 void OpenGLView::initializeGL() {
@@ -32,9 +33,9 @@ void OpenGLView::paintGL() {
     glClearColor(0.2, 0.2, 0.2, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glm::mat4 projection = glm::perspective(mFov , 16.0 / 9.0, 1.0, 100.0);
-    // glm::mat4 view = glm::lookAt(glm::vec3(0.5 + 5 * sin(qDegreesToRadians(eTimer.elapsed()) / 30), 0.5 + 5 * cos(qDegreesToRadians(eTimer.elapsed()) / 30), 1.5),
     double greaterDim = mDimensions.z > mDimensions.x ? mDimensions.z : mDimensions.x;
-    glm::mat4 view = glm::lookAt(glm::vec3(mDimensions.x / 2.0, -((greaterDim/2)/tan(mFov/2)), mDimensions.z / 2.0),
+    glm::mat4 view = glm::lookAt(glm::vec3(0.5 + 5 * sin(qDegreesToRadians(eTimer.elapsed()) / 30), 0.5 + 5 * cos(qDegreesToRadians(eTimer.elapsed()) / 30), 1.5),
+    // glm::mat4 view = glm::lookAt(glm::vec3(mDimensions.x / 2.0, -((greaterDim/2)/tan(mFov/2)), mDimensions.z / 2.0),
                                  glm::vec3(mDimensions.x / 2.0, 0.0, mDimensions.z / 2.0),
                                  glm::vec3(0.0, 0.0, 1.0));
     glm::mat4 model = glm::mat4(1.0);
@@ -42,7 +43,7 @@ void OpenGLView::paintGL() {
     glm::vec3 cameraPos(0.0);
 
     for(auto &i: scene) {
-        shader.drawElements(i->va, i->vb, i->eb, i->color, projection, view, model, lightPos, cameraPos);
+        // shader.drawElements(i->va, i->vb, i->eb, i->color, projection, view, model, lightPos, cameraPos);
     }
     for(auto &i: items) {
         shader.drawElements(i->va, i->vb, i->eb, i->color, projection, view, model, lightPos, cameraPos);

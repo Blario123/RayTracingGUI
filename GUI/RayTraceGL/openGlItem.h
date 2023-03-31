@@ -31,9 +31,10 @@ protected:
 
 class OpenGLItemSphere : public OpenGLItem {
 public:
-    explicit OpenGLItemSphere(const glm::vec3 &, float radius = 1.0);
+    explicit OpenGLItemSphere(const glm::vec3 &, float radius = 0.5);
 private:
     void createVertices();
+    std::vector<float> createPoint(float, float);
     float mRadius;
     int mResolution = 20;
 };
