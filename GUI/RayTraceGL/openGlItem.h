@@ -36,7 +36,7 @@ private:
     void createVertices();
     std::vector<float> createPoint(float, float);
     float mRadius;
-    int mResolution = 20;
+    int mResolution = 40;
 };
 
 class OpenGLItemTorus : public OpenGLItem {
