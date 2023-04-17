@@ -21,11 +21,14 @@ void OpenGLView::initializeGL() {
 
     QSharedPointer<OpenGLItem> cube(new OpenGLItemCuboid(glm::vec3(0.1, 0.1, 0.0),
                                                          glm::vec3(0.2)));
-    QSharedPointer<OpenGLItem> sphere(new OpenGLItemSphere(glm::vec3(0.5)));
+    QSharedPointer<OpenGLItem> sphere(new OpenGLItemSphere(glm::vec3(0.8, 0.5, 0.1), 0.1));
+    QSharedPointer<OpenGLItem> torus(new OpenGLItemTorus(glm::vec3(0.0), 0.1, 0.2));
     cube->setColor(glm::vec3(1.0, 0.0, 0.0));
     sphere->setColor(glm::vec3(1.0, 0.0, 1.0));
-    items.push_back(cube);
-    items.push_back(sphere);
+    torus->setColor(glm::vec3(0.0, 1.0, 1.0));
+//    items.push_back(cube);
+//    items.push_back(sphere);
+    items.push_back(torus);
 }
 
 void OpenGLView::paintGL() {
@@ -33,16 +36,18 @@ void OpenGLView::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glm::mat4 projection = glm::perspective(mFov , 16.0 / 9.0, 1.0, 100.0);
     double greaterDim = mDimensions.z > mDimensions.x ? mDimensions.z : mDimensions.x;
-//    glm::mat4 view = glm::lookAt(glm::vec3(0.5 + 5 * sin(qDegreesToRadians(eTimer.elapsed()) / 30), 0.5 + 5 * cos(qDegreesToRadians(eTimer.elapsed()) / 30), 1.5),
-     glm::mat4 view = glm::lookAt(glm::vec3(mDimensions.x / 2.0, -((greaterDim/2)/tan(mFov/2)), mDimensions.z / 2.0),
-                                 glm::vec3(mDimensions.x / 2.0, 0.0, mDimensions.z / 2.0),
+    glm::mat4 view = glm::lookAt(glm::vec3(0.0, 2.5 * sin(qDegreesToRadians(eTimer.elapsed()) / 30), 2.5 * cos(qDegreesToRadians(eTimer.elapsed()) / 30)),
+//    glm::mat4 view = glm::lookAt(glm::vec3(0.5 + 2.5 * sin(qDegreesToRadians(eTimer.elapsed()) / 30), 0.5 + 2.5 * sin(qDegreesToRadians(eTimer.elapsed()) / 30), 0.5 + 2.5 * cos(qDegreesToRadians(eTimer.elapsed()) / 30)),
+//     glm::mat4 view = glm::lookAt(glm::vec3(mDimensions.x / 2.0, -((greaterDim/2)/tan(mFov/2)), mDimensions.z / 2.0),
+                                 glm::vec3(0.0),
+//                                 glm::vec3(mDimensions.x / 2.0, 0.0, mDimensions.z / 2.0),
                                  glm::vec3(0.0, 0.0, 1.0));
     glm::mat4 model = glm::mat4(1.0);
     glm::vec3 lightPos(20.0, 20.0, -10);
     glm::vec3 cameraPos(0.0);
 
     for(auto &i: scene) {
-         shader.drawElements(i->va, i->vb, i->eb, i->color, projection, view, model, lightPos, cameraPos);
+//         shader.drawElements(i->va, i->vb, i->eb, i->color, projection, view, model, lightPos, cameraPos);
     }
     for(auto &i: items) {
         shader.drawElements(i->va, i->vb, i->eb, i->color, projection, view, model, lightPos, cameraPos);

@@ -41,7 +41,13 @@ private:
 
 class OpenGLItemTorus : public OpenGLItem {
 public:
-    explicit OpenGLItemTorus(double innerRadius, double outerRadius);
+    explicit OpenGLItemTorus(const glm::vec3 &, const float &, const float &);
+private:
+    void createVertices();
+    std::vector<float> createPoint(float, float);
+    int mResolution = 40;
+    float mInnerRadius;
+    float mRadius;
 };
 
 class OpenGLItemCuboid : public OpenGLItem {
