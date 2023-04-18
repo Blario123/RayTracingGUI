@@ -201,9 +201,11 @@ void OpenGLItemReuleaux::createVertices() {
         // Horizontal sectioning
         for(int j = 0; j <= mResolution; j++) {
             float arcDiv = 120.0f / (float) mResolution;
-            float angle = arcDiv * (float) j;
-            float prevAngle = arcDiv * ((float) j - 1);
-            qDebug() << "angle = " << angle << "dist =" << distFromAngle(angle);
+            float angle = ((float) i * 120) + arcDiv * (float) j;
+            float prevAngle = ((float) i * 120) + arcDiv * ((float) j - 1);
+//            qDebug() << "angle = " << angle << "dist =" << distFromAngle(angle);
+            glm::vec2 coords = coordsFromAngle(angle);
+            qDebug() << coords.x << "," << coords.y;
             // Forward sections
             for(int k = 0; k < mResolution; k++) {
                 vertices.insert(vertices.end(), {mPos.x, mPos.y, mPos.z});
@@ -216,4 +218,9 @@ void OpenGLItemReuleaux::createVertices() {
 
 float OpenGLItemReuleaux::distFromAngle(const float &angle) {
     return (0.5f + ((1.0f/6.0f) * cosf(qDegreesToRadians(angle * 3.0f)))) * mSideLength;
+}
+
+glm::vec2 OpenGLItemReuleaux::coordsFromAngle(const float &angle) {
+    float dist = distFromAngle(angle);
+    return {dist * sinf(qDegreesToRadians(angle)), dist * cosf(qDegreesToRadians(angle))};
 }

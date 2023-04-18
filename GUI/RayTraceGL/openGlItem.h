@@ -67,8 +67,9 @@ public:
 private:
     void createVertices();
     float distFromAngle(const float &);
+    glm::vec2 coordsFromAngle(const float &);
     float mSideLength;
-    int mResolution = 4;
+    int mResolution = 40;
 };
 
 #endif //OPENGLITEM_H
