@@ -23,12 +23,15 @@ void OpenGLView::initializeGL() {
                                                          glm::vec3(0.2)));
     QSharedPointer<OpenGLItem> sphere(new OpenGLItemSphere(glm::vec3(0.8, 0.5, 0.1), 0.1));
     QSharedPointer<OpenGLItem> torus(new OpenGLItemTorus(glm::vec3(0.0), 0.1, 0.2));
+    QSharedPointer<OpenGLItem> reuleaux(new OpenGLItemReuleaux(glm::vec3(0.0)));
     cube->setColor(glm::vec3(1.0, 0.0, 0.0));
     sphere->setColor(glm::vec3(1.0, 0.0, 1.0));
     torus->setColor(glm::vec3(0.0, 1.0, 1.0));
-//    items.push_back(cube);
-//    items.push_back(sphere);
-    items.push_back(torus);
+    reuleaux->setColor(glm::vec3(1.0, 1.0, 0.0));
+    // items.push_back(cube);
+    // items.push_back(sphere);
+    // items.push_back(torus);
+    items.push_back(reuleaux);
 }
 
 void OpenGLView::paintGL() {

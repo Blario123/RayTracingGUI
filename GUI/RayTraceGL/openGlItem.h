@@ -63,7 +63,12 @@ private:
 
 class OpenGLItemReuleaux : public OpenGLItem {
 public:
-    explicit OpenGLItemReuleaux(double sideLength);
+    explicit OpenGLItemReuleaux(const glm::vec3 &pos, const float &sideLength = 0.5);
+private:
+    void createVertices();
+    float distFromAngle(const float &);
+    float mSideLength;
+    int mResolution = 4;
 };
 
 #endif //OPENGLITEM_H

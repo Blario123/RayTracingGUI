@@ -178,6 +178,42 @@ void OpenGLItemCuboid::createVertices() {
     };
 }
 
-OpenGLItemReuleaux::OpenGLItemReuleaux(double sideLength) {
+OpenGLItemReuleaux::OpenGLItemReuleaux(const glm::vec3 &pos, const float &sideLength) {
+    mPos = pos;
+    mSideLength = sideLength;
 
+    va.init();
+    va.bind();
+
+    createVertices();
+
+    vb.init(vertices);
+    va.addBuffer(vb);
+    eb.init(indices);
+}
+
+void OpenGLItemReuleaux::createVertices() {
+    vertices.clear();
+    uint indicesCounter = 0;
+    // Bottom face
+    // Split the face into three segments. These are then divided into mResolution chunks.
+    for(int i = 0; i < 3; i++) {
+        // Horizontal sectioning
+        for(int j = 0; j <= mResolution; j++) {
+            float arcDiv = 120.0f / (float) mResolution;
+            float angle = arcDiv * (float) j;
+            float prevAngle = arcDiv * ((float) j - 1);
+            qDebug() << "angle = " << angle << "dist =" << distFromAngle(angle);
+            // Forward sections
+            for(int k = 0; k < mResolution; k++) {
+                vertices.insert(vertices.end(), {mPos.x, mPos.y, mPos.z});
+                indices.insert(indices.end(), {indicesCounter, indicesCounter + 1, indicesCounter + 2});
+                indicesCounter++;
+            }
+        }
+    }
+}
+
+float OpenGLItemReuleaux::distFromAngle(const float &angle) {
+    return (0.5f + ((1.0f/6.0f) * cosf(qDegreesToRadians(angle * 3.0f)))) * mSideLength;
 }
