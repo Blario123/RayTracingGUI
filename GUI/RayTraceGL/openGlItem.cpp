@@ -198,19 +198,18 @@ void OpenGLItemReuleaux::createVertices() {
     // Bottom face
     // Split the face into three segments. These are then divided into mResolution chunks.
     for(int i = 0; i < 3; i++) {
+        double startAngle = i * (2 * M_PI / 3);
+        glm::vec2 arcCenterCoords = {mPos.x + mSideLength * sin(startAngle - M_PI), mPos.y + mSideLength * cos(startAngle - M_PI)};
         // Horizontal sectioning
         for(int j = 0; j <= mResolution; j++) {
-            float arcDiv = 120.0f / (float) mResolution;
-            float angle = ((float) i * 120) + arcDiv * (float) j;
-            float prevAngle = ((float) i * 120) + arcDiv * ((float) j - 1);
-//            qDebug() << "angle = " << angle << "dist =" << distFromAngle(angle);
-            glm::vec2 coords = coordsFromAngle(angle);
-            qDebug() << coords.x << "," << coords.y;
+            double arcDiv = (2 * M_PI/3.0) / mResolution;
+            double angle = startAngle + arcDiv * (float) j;
+            double prevAngle = startAngle + arcDiv * ((float) j - 1);
+            qDebug() << qRadiansToDegrees(angle);
+
+
             // Forward sections
             for(int k = 0; k < mResolution; k++) {
-                vertices.insert(vertices.end(), {mPos.x, mPos.y, mPos.z});
-                indices.insert(indices.end(), {indicesCounter, indicesCounter + 1, indicesCounter + 2});
-                indicesCounter++;
             }
         }
     }
