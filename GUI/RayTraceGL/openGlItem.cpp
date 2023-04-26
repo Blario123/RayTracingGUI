@@ -199,27 +199,22 @@ void OpenGLItemReuleaux::createVertices() {
     // Split the face into three segments. These are then divided into mResolution chunks.
     for(int i = 0; i < 3; i++) {
         double startAngle = i * (2 * M_PI / 3);
-        glm::vec2 arcCenterCoords = {mPos.x + mSideLength * sin(startAngle - M_PI), mPos.y + mSideLength * cos(startAngle - M_PI)};
+        glm::vec2 arcCenterCoords = {mPos.x + (mSideLength * EULER_M_CONST) * sin(startAngle - M_PI), mPos.y + (mSideLength * EULER_M_CONST) * cos(startAngle - M_PI)};
         // Horizontal sectioning
-        for(int j = 0; j <= mResolution; j++) {
-            double arcDiv = (2 * M_PI/3.0) / mResolution;
+        for(int j = 1; j <= mResolution; j++) {
+            double arcDiv = (M_PI/3.0) / mResolution;
             double angle = startAngle + arcDiv * (float) j;
             double prevAngle = startAngle + arcDiv * ((float) j - 1);
-            qDebug() << qRadiansToDegrees(angle);
-
-
+            glm::vec2 pos = coordsFromPoint(arcCenterCoords, prevAngle);
+//            qDebug() << pos.x << "," << pos.y;
             // Forward sections
             for(int k = 0; k < mResolution; k++) {
+
             }
         }
     }
 }
 
-float OpenGLItemReuleaux::distFromAngle(const float &angle) {
-    return (0.5f + ((1.0f/6.0f) * cosf(qDegreesToRadians(angle * 3.0f)))) * mSideLength;
-}
-
-glm::vec2 OpenGLItemReuleaux::coordsFromAngle(const float &angle) {
-    float dist = distFromAngle(angle);
-    return {dist * sinf(qDegreesToRadians(angle)), dist * cosf(qDegreesToRadians(angle))};
+glm::vec2 OpenGLItemReuleaux::coordsFromPoint(const glm::vec2 &pos, const double &angle) const {
+    return {pos.x + (mSideLength * sin(angle - (M_PI/6.0))), pos.y + (mSideLength * cos(angle - (M_PI/6.0)))};
 }

@@ -13,6 +13,8 @@
 #include "openGlVertexBuffer.h"
 #include "openGlElementBuffer.h"
 
+#define EULER_M_CONST 0.5772156649015329
+
 class OpenGLItem : protected QOpenGLFunctions_3_3_Core {
 public:
     explicit OpenGLItem();
@@ -66,10 +68,9 @@ public:
     explicit OpenGLItemReuleaux(const glm::vec3 &pos, const float &sideLength = 0.5);
 private:
     void createVertices();
-    float distFromAngle(const float &);
-    glm::vec2 coordsFromAngle(const float &);
+    glm::vec2 coordsFromPoint(const glm::vec2 &pos, const double &angle) const;
     float mSideLength;
-    int mResolution = 40;
+    int mResolution = 4;
 };
 
 #endif //OPENGLITEM_H
