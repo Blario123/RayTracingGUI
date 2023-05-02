@@ -205,10 +205,31 @@ void OpenGLItemReuleaux::createVertices() {
             double arcDiv = (M_PI/3.0) / mResolution;
             double angle = startAngle + arcDiv * (float) j;
             double prevAngle = startAngle + arcDiv * ((float) j - 1);
-            glm::vec2 pos = coordsFromPoint(arcCenterCoords, prevAngle);
+            glm::vec2 pos = coordsFromPoint(arcCenterCoords, angle);
+            glm::vec2 prevPos = coordsFromPoint(arcCenterCoords, prevAngle);
 //            qDebug() << pos.x << "," << pos.y;
             // Forward sections
-            for(int k = 0; k < mResolution; k++) {
+            vertices.insert(vertices.end(), {mPos.x, mPos.y, mPos.z});
+            indices.insert(indices.end(), {indicesCounter, indicesCounter + 1, indicesCounter + 2});
+            indicesCounter++;
+            for(int k = 1; k <= mResolution; k++) {
+                std::vector<float> pos1 = subPointCoords(k - 1, prevPos);
+                std::vector<float> pos2 = subPointCoords(k - 1, pos);
+                std::vector<float> pos3 = subPointCoords(k, prevPos);
+                std::vector<float> pos4 = subPointCoords(k, pos);
+                vertices.insert(vertices.end(), pos1.begin(), pos1.end());
+                indices.push_back(indicesCounter);
+                indicesCounter++;
+                vertices.insert(vertices.end(), pos2.begin(), pos2.end());
+                indices.push_back(indicesCounter);
+                indicesCounter++;
+                vertices.insert(vertices.end(), pos3.begin(), pos3.end());
+                indices.push_back(indicesCounter);
+                indicesCounter++;
+
+                vertices.insert(vertices.end(), pos4.begin(), pos4.end());
+                indices.insert(indices.end(), {indicesCounter - 1, indicesCounter - 2, indicesCounter});
+                indicesCounter++;
 
             }
         }
@@ -217,4 +238,8 @@ void OpenGLItemReuleaux::createVertices() {
 
 glm::vec2 OpenGLItemReuleaux::coordsFromPoint(const glm::vec2 &pos, const double &angle) const {
     return {pos.x + (mSideLength * sin(angle - (M_PI/6.0))), pos.y + (mSideLength * cos(angle - (M_PI/6.0)))};
+}
+
+std::vector<float> OpenGLItemReuleaux::subPointCoords(const int &div, const glm::vec2 &pos) {
+    return {div * (pos.x - mPos.x) / mResolution, div * (pos.y - mPos.y) / mResolution, 0.0};
 }
