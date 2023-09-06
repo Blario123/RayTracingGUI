@@ -12,10 +12,13 @@ void OpenGLItem::setPosition(const glm::vec3 &pos) {
     mPos = pos;
 }
 
+void OpenGLItem::setAlpha(const float &a) {
+    alpha = a;
+}
+
 OpenGLItemSphere::OpenGLItemSphere(const glm::vec3 &pos, float radius) {
     mPos = pos;
     mRadius = radius;
-
     va.init();
     va.bind();
 

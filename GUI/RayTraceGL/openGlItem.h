@@ -22,9 +22,11 @@ public:
     OpenGLVertexBuffer vb;
     OpenGLElementBuffer eb;
     glm::vec3 color;
+    float alpha = 1.0f;
 public slots:
     void setColor(const glm::vec3 &);
     virtual void setPosition(const glm::vec3 &);
+    void setAlpha(const float &);
 protected:
     glm::vec3 mPos;
     std::vector<float> vertices;

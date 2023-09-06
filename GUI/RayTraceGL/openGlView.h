@@ -27,6 +27,7 @@ public slots:
     void setDimensions(const glm::vec3 &);
     void setFov(double);
 private:
+    GLenum mode = GL_FILL;
     double mFov;
     QElapsedTimer eTimer;
     OpenGLShader shader;
