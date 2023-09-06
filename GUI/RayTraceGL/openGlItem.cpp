@@ -196,47 +196,32 @@ OpenGLItemReuleaux::OpenGLItemReuleaux(const glm::vec3 &pos, const float &sideLe
 }
 
 void OpenGLItemReuleaux::createVertices() {
+/*
+    The four corners of the equilateral pyramid:
+    x,                                                          y,                                                  z,
+    x,                                                          y + mSideLength,                                    z,
+    x + mSideLength * sinf(qDegreesToRadians(60.0f)),           y + mSideLength * cosf(qDegreesToRadians(60.0f)),   z,
+    x + mSideLength * sinf(qDegreesToRadians(60.0f)) * 0.333f,  y + mSideLength * cosf(qDegreesToRadians(60.0f)),   z + mSideLength * sinf(qDegreesToRadians(60.0f)) * cosf(qDegreesToRadians(30.0f))
+*/
     vertices.clear();
-    uint indicesCounter = 0;
-    // Bottom face
-    // Split the face into three segments. These are then divided into mResolution chunks.
-    for(int i = 0; i < 3; i++) {
-        double startAngle = i * (2 * M_PI / 3);
-        glm::vec2 arcCenterCoords = {mPos.x + (mSideLength * EULER_M_CONST) * sin(startAngle - M_PI), mPos.y + (mSideLength * EULER_M_CONST) * cos(startAngle - M_PI)};
-        // Horizontal sectioning
-        for(int j = 1; j <= mResolution; j++) {
-            double arcDiv = (M_PI/3.0) / mResolution;
-            double angle = startAngle + arcDiv * (float) j;
-            double prevAngle = startAngle + arcDiv * ((float) j - 1);
-            glm::vec2 pos = coordsFromPoint(arcCenterCoords, angle);
-            glm::vec2 prevPos = coordsFromPoint(arcCenterCoords, prevAngle);
-//            qDebug() << pos.x << "," << pos.y;
-            // Forward sections
-            vertices.insert(vertices.end(), {mPos.x, mPos.y, mPos.z});
-            indices.insert(indices.end(), {indicesCounter, indicesCounter + 1, indicesCounter + 2});
-            indicesCounter++;
-            for(int k = 1; k <= mResolution; k++) {
-                std::vector<float> pos1 = subPointCoords(k - 1, prevPos);
-                std::vector<float> pos2 = subPointCoords(k - 1, pos);
-                std::vector<float> pos3 = subPointCoords(k, prevPos);
-                std::vector<float> pos4 = subPointCoords(k, pos);
-                vertices.insert(vertices.end(), pos1.begin(), pos1.end());
-                indices.push_back(indicesCounter);
-                indicesCounter++;
-                vertices.insert(vertices.end(), pos2.begin(), pos2.end());
-                indices.push_back(indicesCounter);
-                indicesCounter++;
-                vertices.insert(vertices.end(), pos3.begin(), pos3.end());
-                indices.push_back(indicesCounter);
-                indicesCounter++;
-
-                vertices.insert(vertices.end(), pos4.begin(), pos4.end());
-                indices.insert(indices.end(), {indicesCounter - 1, indicesCounter - 2, indicesCounter});
-                indicesCounter++;
-
-            }
-        }
+    std::vector<glm::vec3> cardinals = {
+        mPos,
+        glm::vec3(mPos.x, mPos.y + mSideLength, mPos.z),
+        glm::vec3(mPos.x + mSideLength * sinf(qDegreesToRadians(60.0f)), mPos.y + mSideLength * cosf(qDegreesToRadians(60.0f)), mPos.z),
+        glm::vec3(mPos.x + mSideLength * sinf(qDegreesToRadians(60.0f)) * (1.0f/3.0f), mPos.y + mSideLength * cosf(qDegreesToRadians(60.0f)), mPos.z + mSideLength * sinf(qDegreesToRadians(60.0f)) * cosf(qDegreesToRadians(30.0f)))
+    };
+    for(const glm::vec3 &i: cardinals) {
+        vertices.emplace_back(i.x);
+        vertices.emplace_back(i.y);
+        vertices.emplace_back(i.z);
+        qDebug() << i.x << i.y << i.z;
     }
+    indices = {
+        0, 1, 2,
+        0, 1, 3,
+        1, 2, 3,
+        0, 2, 3
+    };
 }
 
 glm::vec2 OpenGLItemReuleaux::coordsFromPoint(const glm::vec2 &pos, const double &angle) const {
