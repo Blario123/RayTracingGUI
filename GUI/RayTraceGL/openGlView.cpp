@@ -67,16 +67,16 @@ void OpenGLView::resizeGL(int width, int height) {
 }
 
 void OpenGLView::keyPressEvent(QKeyEvent *event) {
-    qDebug() << event->text().toStdString()[0];
+//    qDebug() << event->text().toStdString()[0];
     switch(event->text().toStdString()[0]) {
         case 'w':
         case 'W':
             if(mode == GL_LINE) {
                 mode = GL_FILL;
-                qDebug() << "No wireframe";
+//                qDebug() << "No wireframe";
             } else {
                 mode = GL_LINE;
-                qDebug() << "Wireframe";
+//                qDebug() << "Wireframe";
             }
             break;
         case '1' ... '9':
@@ -85,8 +85,6 @@ void OpenGLView::keyPressEvent(QKeyEvent *event) {
             break;
     }
     update();
-//    setDimensions(glm::vec3(event->text().toFloat()));
-//     setDimensions({event->text().toFloat(), 1.0, 1.0});
     QOpenGLWidget::keyPressEvent(event);
 }
 

@@ -70,8 +70,6 @@ public:
     explicit OpenGLItemReuleaux(const glm::vec3 &pos, const float &sideLength = 0.5);
 private:
     void createVertices();
-    glm::vec2 coordsFromPoint(const glm::vec2 &pos, const double &angle) const;
-    std::vector<float> subPointCoords(const int &div, const glm::vec2 &pos);
     float mSideLength;
     int mResolution = 4;
 };

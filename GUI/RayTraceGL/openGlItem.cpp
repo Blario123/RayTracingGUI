@@ -223,11 +223,3 @@ void OpenGLItemReuleaux::createVertices() {
         0, 2, 3
     };
 }
-
-glm::vec2 OpenGLItemReuleaux::coordsFromPoint(const glm::vec2 &pos, const double &angle) const {
-    return {pos.x + (mSideLength * sin(angle - (M_PI/6.0))), pos.y + (mSideLength * cos(angle - (M_PI/6.0)))};
-}
-
-std::vector<float> OpenGLItemReuleaux::subPointCoords(const int &div, const glm::vec2 &pos) {
-    return {div * (pos.x - mPos.x) / mResolution, div * (pos.y - mPos.y) / mResolution, 0.0};
-}
