@@ -2,8 +2,10 @@
 #define OPENGLVIEW_H
 
 #include <QOpenGLWidget>
+#include <QObject>
 #include <QOpenGLFunctions_3_3_Core>
 #include <QElapsedTimer>
+#include <QTimer>
 #include <QKeyEvent>
 
 #include <glm/glm.hpp>
@@ -29,13 +31,17 @@ public slots:
 private:
     GLenum mode = GL_FILL;
     double mFov;
-    QElapsedTimer eTimer;
+    bool timerRunning = false;
+//    QElapsedTimer eTimer;
+    QTimer eTimer;
     OpenGLShader shader;
     QList<QSharedPointer<OpenGLItem>> scene;
     QList<QSharedPointer<OpenGLItem>> items;
     glm::vec3 mDimensions; // x: width; y: depth; z: height
     void createScene();
     void updateScene();
+    qint64 time = 0;
+    qint64 getTime();
 };
 
 #endif //OPENGLVIEW_H

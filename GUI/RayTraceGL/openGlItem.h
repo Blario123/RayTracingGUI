@@ -70,8 +70,9 @@ public:
     explicit OpenGLItemReuleaux(const glm::vec3 &pos, const float &sideLength = 0.5);
 private:
     void createVertices();
+    std::vector<float> createMidpoint(int a, int b);
     float mSideLength;
-    int mResolution = 4;
+    int mResolution = 2;
 };
 
 #endif //OPENGLITEM_H
