@@ -14,6 +14,7 @@
 
 #include "openGlShader.h"
 #include "openGlItem.h"
+#include "openGlItems.h"
 
 class OpenGLView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
     Q_OBJECT

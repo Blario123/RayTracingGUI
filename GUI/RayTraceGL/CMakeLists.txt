@@ -8,7 +8,12 @@ set(SRC
         openGlVertexArray.cpp
         openGlVertexBuffer.cpp
         openGlElementBuffer.cpp
-        openGlItem.cpp)
+        openGlItem.cpp
+        items/openGlItemArrow.h
+        items/openGlItemCuboid.h
+        items/openGlItemReuleaux.h
+        items/openGlItemSphere.h
+        items/openGlItemReuleaux.h)
 
 set(TESTS
         test/main.cpp)

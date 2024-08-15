@@ -33,46 +33,4 @@ protected:
     std::vector<uint> indices;
 };
 
-class OpenGLItemSphere : public OpenGLItem {
-public:
-    explicit OpenGLItemSphere(const glm::vec3 &, float radius = 0.5);
-private:
-    void createVertices();
-    std::vector<float> createPoint(float, float);
-    float mRadius;
-    int mResolution = 40;
-};
-
-class OpenGLItemTorus : public OpenGLItem {
-public:
-    explicit OpenGLItemTorus(const glm::vec3 &, const float &, const float &);
-private:
-    void createVertices();
-    std::vector<float> createPoint(float, float);
-    int mResolution = 40;
-    float mInnerRadius;
-    float mRadius;
-};
-
-class OpenGLItemCuboid : public OpenGLItem {
-public:
-    explicit OpenGLItemCuboid(glm::vec3 pos, glm::vec3 dimensions);
-public slots:
-    void setPosition(const glm::vec3 &) override;
-    void setDimensions(const glm::vec3 &);
-private:
-    void createVertices();
-    glm::vec3 mDimensions;
-};
-
-class OpenGLItemReuleaux : public OpenGLItem {
-public:
-    explicit OpenGLItemReuleaux(const glm::vec3 &pos, const float &sideLength = 0.5);
-private:
-    void createVertices();
-    std::vector<float> createMidpoint(int a, int b);
-    float mSideLength;
-    int mResolution = 2;
-};
-
 #endif //OPENGLITEM_H

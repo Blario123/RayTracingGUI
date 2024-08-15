@@ -1,0 +1,5 @@
+#include "items/openGlItemArrow.h"
+#include "items/openGlItemCuboid.h"
+#include "items/openGlItemReuleaux.h"
+#include "items/openGlItemSphere.h"
+#include "items/openGlItemTorus.h"
