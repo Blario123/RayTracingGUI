@@ -93,3 +93,4 @@ _deps
 *.depends
 RayTracingGUI
 /GUI/RayTraceGL/RayTraceGLTest
+build/
