@@ -33,26 +33,31 @@ private:
                 float prevAngleVert = ((float) j - 1) * loopAngleVert;
                 float angleVert = (float) j * loopAngleVert;
 
-                std::vector<float> pos1 = createPoint(prevAngleHz, prevAngleVert);
-                std::vector<float> pos2 = createPoint(angleHz, prevAngleVert);
-                std::vector<float> pos3 = createPoint(angleHz, angleVert);
-                std::vector<float> pos4 = createPoint(prevAngleHz, angleVert);
+                std::vector<float> pos = createPoint(prevAngleHz, prevAngleVert);
 
-                vertices.insert(vertices.end(), pos1.begin(), pos1.end());
+                vertices.insert(vertices.end(), pos.begin(), pos.end());
+                indices.push_back(indicesCounter);
+                indicesCounter++;
+                
+                pos = createPoint(angleHz, prevAngleVert);
+
+                vertices.insert(vertices.end(), pos.begin(), pos.end());
                 indices.push_back(indicesCounter);
                 indicesCounter++;
 
-                vertices.insert(vertices.end(), pos2.begin(), pos2.end());
+                pos = createPoint(angleHz, angleVert);
+
+                vertices.insert(vertices.end(), pos.begin(), pos.end());
                 indices.push_back(indicesCounter);
                 indicesCounter++;
 
-                vertices.insert(vertices.end(), pos3.begin(), pos3.end());
-                indicesCounter++;
-                indices.push_back(indicesCounter);
+                pos = createPoint(prevAngleHz, angleVert);
 
-                vertices.insert(vertices.end(), pos4.begin(), pos4.end());
+                vertices.insert(vertices.end(), pos.begin(), pos.end());
                 indices.insert(indices.end(), {indicesCounter - 2, indicesCounter - 1, indicesCounter});
                 indicesCounter++;
+
+                pos.clear();
             }
             vertices.insert(vertices.end(), {mPos.x, mPos.y, mPos.z - mRadius});
             indices.insert(indices.end(), {indicesCounter - 2, indicesCounter - 1, indicesCounter});
