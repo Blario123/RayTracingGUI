@@ -17,7 +17,7 @@
 #include "openGlItems.h"
 
 class OpenGLView : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core {
-    Q_OBJECT
+Q_OBJECT
 public:
     explicit OpenGLView(QWidget *parent = nullptr);
     ~OpenGLView() override = default;
@@ -29,6 +29,20 @@ protected:
 public slots:
     void setDimensions(const glm::vec3 &);
     void setFov(double);
+    // TODO: Delete after testing
+    void setXAngle(int x){
+        angles.x = x;
+        setAngles();
+    };
+    void setYAngle(int y){
+        angles.y = y;
+        setAngles();
+    };
+    void setZAngle(int z){
+        angles.z = z;
+        setAngles();
+    };
+    void setAngles();
 private:
     GLenum mode = GL_FILL;
     double mFov;
@@ -43,6 +57,8 @@ private:
     void updateScene();
     qint64 time = 0;
     qint64 getTime();
+    // TODO: Delete after testing
+    glm::ivec3 angles;
 };
 
 #endif //OPENGLVIEW_H

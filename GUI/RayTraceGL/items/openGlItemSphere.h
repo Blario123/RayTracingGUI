@@ -38,7 +38,7 @@ private:
                 vertices.insert(vertices.end(), pos.begin(), pos.end());
                 indices.push_back(indicesCounter);
                 indicesCounter++;
-                
+
                 pos = createPoint(angleHz, prevAngleVert);
 
                 vertices.insert(vertices.end(), pos.begin(), pos.end());

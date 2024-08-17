@@ -4,8 +4,9 @@ OpenGLView::OpenGLView(QWidget *parent) : QOpenGLWidget(parent) {
     Q_INIT_RESOURCE(openGlResources);
     setFocusPolicy(Qt::StrongFocus);
     eTimer.start(1);
-    //setFixedSize(1920, 1080);
-    setMinimumSize(400,400);
+    eTimer.stop();
+    time = 0;
+    setFixedSize(1920, 1080);
     connect(&eTimer, &QTimer::timeout, this, [=](){
         time++;
     });
@@ -29,20 +30,20 @@ void OpenGLView::initializeGL() {
     QSharedPointer<OpenGLItem> sphere(new OpenGLItemSphere(glm::vec3(0.8, 0.5, 0.1), 0.1));
     QSharedPointer<OpenGLItem> torus(new OpenGLItemTorus(glm::vec3(0.0), 0.1, 0.2));
     QSharedPointer<OpenGLItem> reuleaux(new OpenGLItemReuleaux(glm::vec3(0.0), 0.25));
-    QSharedPointer<OpenGLItem> xArrow(new OpenGLItemArrow(glm::vec3(0), OpenGLItemArrow::Orientation::X));
-    QSharedPointer<OpenGLItem> yArrow(new OpenGLItemArrow(glm::vec3(0), OpenGLItemArrow::Orientation::Y));
-    QSharedPointer<OpenGLItem> zArrow(new OpenGLItemArrow(glm::vec3(0), OpenGLItemArrow::Orientation::Z));
+    QSharedPointer<OpenGLItem> xArrow(new OpenGLItemArrow(glm::vec3(0.0f), OpenGLItemArrow::X));
+    QSharedPointer<OpenGLItem> yArrow(new OpenGLItemArrow(glm::vec3(0.0f), OpenGLItemArrow::Y));
+    QSharedPointer<OpenGLItem> zArrow(new OpenGLItemArrow(glm::vec3(0.0f), OpenGLItemArrow::Z));
     cube->setColor(glm::vec3(1.0, 0.0, 0.0));
     sphere->setColor(glm::vec3(1.0, 0.0, 1.0));
     torus->setColor(glm::vec3(0.0, 1.0, 1.0));
     reuleaux->setColor(glm::vec3(1.0, 1.0, 0.0));
-    xArrow->setColor(glm::vec3(1.0f, 0.0f, 0.0f));
-    yArrow->setColor(glm::vec3(0.0f, 1.0f, 0.0f));
-    zArrow->setColor(glm::vec3(0.0f, 0.0f, 1.0f));
+    xArrow->setColor(glm::vec3(1.0, 0.0, 0.0));
+    yArrow->setColor(glm::vec3(0.0, 1.0, 0.0));
+    zArrow->setColor(glm::vec3(0.0, 0.0, 1.0));
 //     items.push_back(cube);
 //     items.push_back(sphere);
 //     items.push_back(torus);
-//     items.push_back(reuleaux);
+    items.push_back(reuleaux);
     items.push_back(xArrow);
     items.push_back(yArrow);
     items.push_back(zArrow);
@@ -56,7 +57,7 @@ void OpenGLView::paintGL() {
     double greaterDim = mDimensions.z > mDimensions.x ? mDimensions.z : mDimensions.x;
     float viewRadius = 1.0f;
     glm::mat4 view = glm::lookAt(
-        glm::vec3(viewRadius * sin(qDegreesToRadians(getTime())), viewRadius * cos(qDegreesToRadians(getTime())), 4.0), //eye
+        glm::vec3(viewRadius * sin(qDegreesToRadians(getTime())), viewRadius * cos(qDegreesToRadians(getTime())), 2.0f), //eye
         //glm::vec3(0.0721688, 0.125, 0.0), // center
         glm::vec3(0.0),
         glm::vec3(0.0, 0.0, 1.0) // up (Z-axis)
@@ -153,4 +154,8 @@ qint64 OpenGLView::getTime() {
         time -= 360;
     }
     return time;
+}
+
+void OpenGLView::setAngles() {
+    items[0].dynamicCast<OpenGLItemReuleaux>()->setEulerAngles(angles.x, angles.y, angles.z);
 }

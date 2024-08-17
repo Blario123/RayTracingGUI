@@ -18,37 +18,47 @@ public:
         va.addBuffer(vb);
         eb.init(indices);
     };
+    // TODO: Remove after testing
+    void setEulerAngles(int x, int y, int z) {
+        e_X = glm::radians((float) x);
+        e_Y = glm::radians((float) x);
+        e_Z = glm::radians((float) x);
+        createVertices();
+    };
 private:
     void createVertices() {
+        if((mResolution % 2) != 0) {
+            mResolution++;
+        }
         /*
-        The four corners of the equilateral pyramid:
-        x,                      y,               z,
-        x,                      y + r,           z,
-        x + r * sin(60),        y + r * cos(60), z,
-        x + r * sin(60) * 1/3,  y + r * cos(60), z + sqrt(r^2 - (r * sin(60) - (1/3) * r * sin(60))^2)
-        */
+            The four corners of the equilateral pyramid:
+            x,                      y,               z,
+            x,                      y + r,           z,
+            x + r * sin(60),        y + r * cos(60), z,
+            x + r * sin(60) * 1/3,  y + r * cos(60), z + sqrt(r^2 - (r * sin(60) - (1/3) * r * sin(60))^2)
+*/
         vertices.clear();
         // Push the cardinal angles to the vertices vector
         vertices.insert(vertices.end(), {   mPos.x,
-                                            mPos.y,
-                                            mPos.z});
+            mPos.y,
+            mPos.z});
         vertices.insert(vertices.end(), {   mPos.x,
-                                            mPos.y + mSideLength,
-                                            mPos.z});
+            mPos.y + mSideLength,
+            mPos.z});
         vertices.insert(vertices.end(), {   mPos.x + mSideLength * sinf(qDegreesToRadians(60.0f)),
-                                            mPos.y + mSideLength * cosf(qDegreesToRadians(60.0f)),
-                                            mPos.z});
+            mPos.y + mSideLength * cosf(qDegreesToRadians(60.0f)),
+            mPos.z});
         vertices.insert(vertices.end(), {   mPos.x + mSideLength * 0.5f * tanf(qDegreesToRadians(30.0f)),
-                                            mPos.y + mSideLength * cosf(qDegreesToRadians(60.0f)),
-                                            mPos.z + sqrtf(powf(mSideLength, 2) - powf((mSideLength * sinf(qDegreesToRadians(60.0))) - ((1.0f/3.0f) * (mSideLength * sinf(M_PI/3))), 2))});
-    
+            mPos.y + mSideLength * cosf(qDegreesToRadians(60.0f)),
+            mPos.z + sqrtf(powf(mSideLength, 2) - powf((mSideLength * sinf(qDegreesToRadians(60.0))) - ((1.0f/3.0f) * (mSideLength * sinf(M_PI/3))), 2))});
+
         indices = {
             0, 1, 2,
             0, 1, 3,
             1, 2, 3,
             0, 2, 3
         };
-    
+
         // Require midpoints for
         std::vector<float> midpoints;
         std::vector<float> temp;
@@ -60,16 +70,6 @@ private:
         midpoints.insert(midpoints.end(), temp.begin(), temp.end());
         // 1 to 2
         temp = createMidpoint(1, 2);
-        qDebug() << temp;
-        midpoints.insert(midpoints.end(), temp.begin(), temp.end());
-        // 0 to 3
-        temp = createMidpoint(0, 3);
-        midpoints.insert(midpoints.end(), temp.begin(), temp.end());
-        // 1 to 3
-        temp = createMidpoint(1, 3);
-        midpoints.insert(midpoints.end(), temp.begin(), temp.end());
-        // 2 to 3
-        temp = createMidpoint(2, 3);
         midpoints.insert(midpoints.end(), temp.begin(), temp.end());
         float angleStep = (70.553364148f) / (float) mResolution;
         float theta = qDegreesToRadians(210.0);
@@ -84,11 +84,14 @@ private:
                 float angle = qDegreesToRadians(90 - ((float) j * angleStep));
                 float anglePrev = qDegreesToRadians(90 - ((float) (j - 1) * angleStep));
                 vertices.insert(vertices.end(), {midPoint.x + (newSideLength * sinf(angle) * sinf(theta)),
-                                                 midPoint.y + (newSideLength * sinf(angle) * cosf(theta)),
-                                                 midPoint.z + (newSideLength * cosf(angle))});
+                    midPoint.y + (newSideLength * sinf(angle) * cosf(theta)),
+                    midPoint.z + (newSideLength * cosf(angle))});
+                if(j == (mResolution / 2)) {
+                    midpoints.insert(midpoints.end(), vertices.end() - 3, vertices.end());
+                }
                 vertices.insert(vertices.end(), {midPoint.x + (newSideLength * sinf(anglePrev) * sinf(theta)),
-                                                 midPoint.y + (newSideLength * sinf(anglePrev) * cosf(theta)),
-                                                 midPoint.z + (newSideLength * cosf(anglePrev))});
+                    midPoint.y + (newSideLength * sinf(anglePrev) * cosf(theta)),
+                    midPoint.z + (newSideLength * cosf(anglePrev))});
                 indices.insert(indices.end(), {midpointIndex, indicesCounter, indicesCounter + 1});
                 indicesCounter += 2;
             }
@@ -97,21 +100,43 @@ private:
         float offsetAngle = qDegreesToRadians(90.0f + (70.553364148f/2.0f));
         theta -= qDegreesToRadians(30.0f);
         // Bottom edges need to have the curves added too
-        for(int i = 3; i < 6; i++) {
+        // TODO: Change back after testing
+        for(int i = 3; i < 4; i++) {
+//    for(int i = 3; i < 6; i++) {
             theta += qDegreesToRadians(120.0f);
             uint midpointIndex = vertices.size()/3;
             uint indicesCounter = midpointIndex + 1;
             glm::vec3 midPoint = {midpoints[i * 3], midpoints[(i * 3) + 1], midpoints[(i * 3) + 2]};
-            vertices.insert(vertices.end(), {midPoint.x, midPoint.y, midPoint.z});
+//        vertices.insert(vertices.end(), {midPoint.x, midPoint.y, midPoint.z});
+            vertices.insert(vertices.end(), {0.0f, 0.0f, 0.0f});
             for(int j = 1; j < mResolution + 1; j++) {
                 float angle = qDegreesToRadians(90 - ((float) j * angleStep));
                 float anglePrev = qDegreesToRadians(90 - ((float) (j - 1) * angleStep));
-                vertices.insert(vertices.end(), {midPoint.x + (newSideLength * sinf(angle + offsetAngle) * sinf(theta)) + (newSideLength * cosf(qDegreesToRadians(35.264)) * cosf(qDegreesToRadians(90.0f + 30.0f + roll))),
-                                                 midPoint.y + (newSideLength * sinf(angle + offsetAngle) * cosf(theta)),
-                                                 midPoint.z + (newSideLength * cosf(angle + offsetAngle)) + (newSideLength * sinf(qDegreesToRadians(35.264)))});
-                vertices.insert(vertices.end(), {midPoint.x + (newSideLength * sinf(anglePrev + offsetAngle) * sinf(theta)) + (newSideLength * cosf(qDegreesToRadians(35.264)) * cosf(qDegreesToRadians(90.0f + 30.0f + roll))),
-                                                 midPoint.y + (newSideLength * sinf(anglePrev + offsetAngle) * cosf(theta)),
-                                                 midPoint.z + (newSideLength * cosf(anglePrev + offsetAngle)) + (newSideLength * sinf(qDegreesToRadians(35.264)))});
+                glm::vec4 p1 = {    (mSideLength * sinf(angle) * sinf(theta)),
+                    (mSideLength * sinf(angle) * cosf(theta)),
+                    (mSideLength * cosf(angle)),
+                    1.0f
+                };
+                glm::vec4 p2 = {    (mSideLength * sinf(anglePrev) * sinf(theta)),
+                    (mSideLength * sinf(anglePrev) * cosf(theta)),
+                    (mSideLength * cosf(anglePrev)),
+                    1.0f
+                };
+
+                glm::quat q1(cosf(e_X / 2.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 0.0f)) * sinf(e_X / 2.0f)); // X
+                glm::quat q2(cosf(e_Y / 2.0f), glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f)) * sinf(e_Y / 2.0f)); // Y
+                glm::quat q3(cosf(e_Z / 2.0f), glm::normalize(glm::vec3(0.0f, 0.0f, 1.0f)) * sinf(e_Z / 2.0f)); // Z
+                glm::mat4 m1 = glm::mat4_cast(q1);
+                glm::mat4 m2 = glm::mat4_cast(q2);
+                glm::mat4 m3 = glm::mat4_cast(q3);
+                glm::mat4 m4 = glm::translate(glm::mat4(), glm::vec3(midPoint));
+
+                p1 = m1 * m2 * m3 * p1;
+                p2 = m1 * m2 * m3 * p2;
+//            vertices.insert(vertices.end(), {midPoint.x + p1.x, midPoint.y + p1.y, midPoint.z + p1.z}),
+//            vertices.insert(vertices.end(), {midPoint.x + p2.x, midPoint.y + p2.y, midPoint.z + p2.z});
+                vertices.insert(vertices.end(), {p1.x, p1.y, p1.z}),
+                    vertices.insert(vertices.end(), {p2.x, p2.y, p2.z});
                 indices.insert(indices.end(), {midpointIndex, indicesCounter, indicesCounter + 1});
                 indicesCounter += 2;
             }
@@ -125,7 +150,11 @@ private:
         return {(aV[0] + bV[0])/2, (aV[1] + bV[1])/2, (aV[2] + bV[2])/2};
     };
     float mSideLength;
-    int mResolution = 2;
+    int mResolution = 10;
+    // TODO: Delete after testing
+    float e_X = 0.0f;
+    float e_Y = 0.0f;
+    float e_Z = 0.0f;
 };
 
 #endif // REULEAUX_H
