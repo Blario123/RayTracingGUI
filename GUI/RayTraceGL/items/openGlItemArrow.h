@@ -37,28 +37,34 @@ private:
             float anglePrev = segmentAngle * (float) (i - 1);
             float theta = 0.0f;
             float phi = 0.0f;
+            float x = 1.0f;
+            float y = 1.0f;
+            float z = 1.0f;
             switch(mOrientation) {
                 case X:
                     phi = M_PI_2f;
+                    x = 0.0f;
                     break;
                 case Y:
                     theta = M_PI_2f;
                     phi = M_PI_2f;
+                    y = 0.0f;
                     break;
                 case Z:
+                    z = 0.0f;
                     break;
             }
             vertices.insert(vertices.end(), {
-                    (mRadius * cosf(angle) * cosf(theta)),
-                    (mRadius * sinf(angle)),
-//                    0
-                    (mRadius * sinf(angle) * cosf(phi))
+                    mRadius * cosf(angle) * x,
+                    mRadius * sinf(angle) * y,
+                    mRadius * cosf(angle + theta) * z
+//                    mRadius * sinf(angle) * cosf(phi)
             });
             vertices.insert(vertices.end(), {
-                    (mRadius * cosf(anglePrev) * cosf(theta)),
-                    (mRadius * sinf(anglePrev)),
-//                    0
-                    (mRadius * cosf(anglePrev) * cosf(phi))
+                    mRadius * cosf(anglePrev) * x,
+                    mRadius * sinf(anglePrev) * y,
+                    mRadius * cosf(anglePrev + theta) * z
+//                    (mRadius * cosf(anglePrev) * cosf(phi))
             });
             vertices.insert(vertices.end(), {
                     vertices[(1 * 3)] + vertices[(indicesCounter * 3)],
