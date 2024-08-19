@@ -86,8 +86,8 @@ private:
     };
     Orientation mOrientation;
     int mResolution = 10;
-    float mLength = 2.0f;
-    float mRadius = 0.01f;
+    float mLength = 0.5f;
+    float mRadius = 0.001f;
 };
 
 #endif //ARROW_H

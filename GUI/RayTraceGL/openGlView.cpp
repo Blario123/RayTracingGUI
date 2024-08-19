@@ -1,14 +1,15 @@
 #include "openGlView.h"
 
-OpenGLView::OpenGLView(QWidget *parent) : QOpenGLWidget(parent) {
+OpenGLView::OpenGLView(QWidget *parent) : QOpenGLWidget(parent), mFov(0.0), mDimensions{1.0, 1.0, 1.0} {
     Q_INIT_RESOURCE(openGlResources);
     setFocusPolicy(Qt::StrongFocus);
     eTimer.start(1);
     eTimer.stop();
     time = 0;
     setFixedSize(1920, 1080);
-    connect(&eTimer, &QTimer::timeout, this, [=](){
+    QMetaObject::Connection c = connect(&eTimer, &QTimer::timeout, this, [=](){
         time++;
+        setViewRotationTime();
     });
 }
 
@@ -20,7 +21,6 @@ void OpenGLView::initializeGL() {
     glEnable(GL_BLEND);
     glViewport(0, 0, 800, 800);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    mDimensions = {1.0, 1.0, 1.0};
     setFov(33.0);
 
     createScene();
@@ -55,9 +55,10 @@ void OpenGLView::paintGL() {
     glPolygonMode(GL_FRONT_AND_BACK, mode);
     glm::mat4 projection = glm::perspective(mFov , 16.0 / 9.0, 0.01, 100.0);
     double greaterDim = mDimensions.z > mDimensions.x ? mDimensions.z : mDimensions.x;
-    float viewRadius = 1.0f;
+    float viewRadius = 2.0f;
     glm::mat4 view = glm::lookAt(
-        glm::vec3(viewRadius * sin(qDegreesToRadians(getTime())), viewRadius * cos(qDegreesToRadians(getTime())), 2.0f), //eye
+//        glm::vec3(viewRadius * sin(qDegreesToRadians(getTime())), viewRadius * cos(qDegreesToRadians(setViewRotationTime())), 1.0f), //eye
+        glm::vec3(viewRadius * sinf(viewAngles.x), viewRadius * cosf(viewAngles.x), viewRadius * sinf(viewAngles.y)), //eye
         //glm::vec3(0.0721688, 0.125, 0.0), // center
         glm::vec3(0.0),
         glm::vec3(0.0, 0.0, 1.0) // up (Z-axis)
@@ -97,6 +98,7 @@ void OpenGLView::keyPressEvent(QKeyEvent *event) {
             if(eTimer.isActive()) {
                 eTimer.stop();
             } else {
+                time = (180.0f/M_PIf) * (viewAngles.x);
                 eTimer.start(1);
             }
         default:
@@ -149,13 +151,42 @@ void OpenGLView::updateScene() {
     scene[4].dynamicCast<OpenGLItemCuboid>()->setPosition(glm::vec3(0.0, mDimensions.y, 0.0));
 }
 
-qint64 OpenGLView::getTime() {
+void OpenGLView::setViewRotationTime() {
     if(time > 360) {
         time -= 360;
     }
-    return time;
+    viewAngles.x = (float) time * (M_PIf/180.0f);
 }
 
 void OpenGLView::setAngles() {
     items[0].dynamicCast<OpenGLItemReuleaux>()->setEulerAngles(angles.x, angles.y, angles.z);
+}
+
+void OpenGLView::mouseMoveEvent(QMouseEvent *event) {
+    QPointF mousePos;
+    mousePos = event->position();
+    if(mousePosPrev == QPointF(-1.0f, -1.0f)) {
+        mousePosPrev = mousePos;
+    }
+    if(!eTimer.isActive()) {
+        viewAngles.x -= (float) ((mousePosPrev.x() - mousePos.x()) / 2.0f * (M_PIf / 180.0f));
+        viewAngles.y += (float) ((mousePosPrev.y() - mousePos.y()) / 2.0f * (M_PIf / 180.0f));
+    } else {
+        viewAngles.y += (float) ((mousePosPrev.y() - mousePos.y()) / 2.0f * (M_PIf / 180.0f));
+    }
+    mousePosPrev = mousePos;
+    QWidget::mouseMoveEvent(event);
+}
+
+void OpenGLView::mousePressEvent(QMouseEvent *event) {
+    if(!mouseOffsetSet) {
+        mousePosPrev = QPointF(-1.0f, -1.0f);
+        mouseOffsetSet = true;
+    }
+}
+
+void OpenGLView::mouseReleaseEvent(QMouseEvent *event) {
+    if(mouseOffsetSet) {
+        mouseOffsetSet = false;
+    }
 }

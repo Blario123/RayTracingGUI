@@ -12,18 +12,19 @@ int main(int argc, char *argv[]) {
     format.setDepthBufferSize(24);
     format.setStencilBufferSize(8);
     format.setProfile(QSurfaceFormat::CoreProfile);
+    format.setSamples(10);
     QSurfaceFormat::setDefaultFormat(format);
 
-    QGridLayout* layout = new QGridLayout;
-    QSlider* xSlider = new QSlider(Qt::Orientation::Horizontal);
+    auto* layout = new QGridLayout;
+    auto* xSlider = new QSlider(Qt::Orientation::Horizontal);
     xSlider->setRange(0, 3600);
-    QSlider* ySlider = new QSlider(Qt::Orientation::Horizontal);
+    auto* ySlider = new QSlider(Qt::Orientation::Horizontal);
     ySlider->setRange(0, 3600);
-    QSlider* zSlider = new QSlider(Qt::Orientation::Horizontal);
+    auto* zSlider = new QSlider(Qt::Orientation::Horizontal);
     zSlider->setRange(0, 3600);
-    QLineEdit* xL = new QLineEdit;
-    QLineEdit* yL = new QLineEdit;
-    QLineEdit* zL = new QLineEdit;
+    auto* xL = new QLineEdit;
+    auto* yL = new QLineEdit;
+    auto* zL = new QLineEdit;
 
     auto *view = new OpenGLView;
     layout->addWidget(view, 0, 0, 1, 3);
@@ -37,21 +38,22 @@ int main(int argc, char *argv[]) {
     layout->addWidget(zSlider, 3, 1);
     layout->addWidget(zL, 3, 2);
 
-    QWidget* m = new QWidget;
+    auto* m = new QWidget;
     m->setLayout(layout);
     m->show();
-    QWidget::connect(xSlider, &QSlider::sliderMoved, view, &OpenGLView::setXAngle);
-    QWidget::connect(xSlider, &QSlider::sliderMoved, xL, [xL, xSlider](){
-        xL->setText(QString::number(xSlider->sliderPosition()/10.0f));
+    QMetaObject::Connection c;
+    c = QWidget::connect(xSlider, &QSlider::sliderMoved, view, &OpenGLView::setXAngle);
+    c = QWidget::connect(xSlider, &QSlider::sliderMoved, xL, [xL, xSlider](){
+        xL->setText(QString::number((float) xSlider->sliderPosition()/10.0f));
     });
-    QWidget::connect(ySlider, &QSlider::sliderMoved, view, &OpenGLView::setYAngle);
-    QWidget::connect(ySlider, &QSlider::sliderMoved, yL, [yL, ySlider](){
-        yL->setText(QString::number(ySlider->sliderPosition()/10.0f));
+    c = QWidget::connect(ySlider, &QSlider::sliderMoved, view, &OpenGLView::setYAngle);
+    c = QWidget::connect(ySlider, &QSlider::sliderMoved, yL, [yL, ySlider](){
+        yL->setText(QString::number((float) ySlider->sliderPosition()/10.0f));
     });
-    QWidget::connect(zSlider, &QSlider::sliderMoved, view, &OpenGLView::setZAngle);
-    QWidget::connect(zSlider, &QSlider::sliderMoved, zL, [zL, zSlider](){
-        zL->setText(QString::number(zSlider->sliderPosition()/10.0f));
+    c = QWidget::connect(zSlider, &QSlider::sliderMoved, view, &OpenGLView::setZAngle);
+    c = QWidget::connect(zSlider, &QSlider::sliderMoved, zL, [zL, zSlider](){
+        zL->setText(QString::number((float) zSlider->sliderPosition()/10.0f));
     });
 
-    return a.exec();
+    return QApplication::exec();
 }

@@ -26,6 +26,10 @@ protected:
     void paintGL() override;
     void resizeGL(int, int) override;
     void keyPressEvent(QKeyEvent *) override;
+
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
 public slots:
     void setDimensions(const glm::vec3 &);
     void setFov(double);
@@ -56,9 +60,12 @@ private:
     void createScene();
     void updateScene();
     qint64 time = 0;
-    qint64 getTime();
+    void setViewRotationTime();
+    glm::vec2 viewAngles = {0.0f, 0.0f};
+    QPointF mousePosPrev = {0, 0};
+    bool mouseOffsetSet = false;
     // TODO: Delete after testing
-    glm::ivec3 angles;
+    glm::ivec3 angles = {0,0,0};
 };
 
 #endif //OPENGLVIEW_H
