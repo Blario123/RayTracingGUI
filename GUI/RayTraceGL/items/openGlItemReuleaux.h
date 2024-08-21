@@ -86,40 +86,25 @@ private:
         //
         float angleStep = (60.0f) / (float) mResolution;
         float theta = qDegreesToRadians(210.0);
+        float elevOffsetAngle = 10.553364148f / 2.0f;
         for(int i = 0; i < 3; i++) {
             theta -= qDegreesToRadians(120.0f);
             uint midpointIndex = vertices.size()/3;
             uint indicesCounter = midpointIndex + 1;
-            glm::vec3 midPoint = {midpoints[i * 3], midpoints[(i * 3) + 1], midpoints[(i * 3) + 2]};
-            vertices.insert(vertices.end(), {midPoint.x, midPoint.y, midPoint.z});
-            for(int j = 1; j < mResolution + 1; j++) {
-                float angle = qDegreesToRadians(90 - ((float) j * angleStep));
-                float anglePrev = qDegreesToRadians(90 - ((float) (j - 1) * angleStep));
-                vertices.insert(vertices.end(), {midPoint.x + (mSideLength * sinf(angle) * sinf(theta)),
-                    midPoint.y + (mSideLength * sinf(angle) * cosf(theta)),
-                    midPoint.z + (mSideLength * cosf(angle))});
-                if(j == (mResolution / 2)) {
-                    midpoints.insert(midpoints.end(), vertices.end() - 3, vertices.end());
-                }
-                vertices.insert(vertices.end(), {midPoint.x + (mSideLength * sinf(anglePrev) * sinf(theta)),
-                    midPoint.y + (mSideLength * sinf(anglePrev) * cosf(theta)),
-                    midPoint.z + (mSideLength * cosf(anglePrev))});
-//                indices.insert(indices.end(), {midpointIndex, indicesCounter, indicesCounter + 1});
-                indicesCounter += 2;
+            int offsetVertexPos;
+            switch(i) {
+                case 0:
+                    offsetVertexPos = 2;
+                    break;
+                case 1:
+                    offsetVertexPos = 1;
+                    break;
+                case 2:
+                    offsetVertexPos = 0;
+                    break;
             }
-        }
-        theta -= qDegreesToRadians(30.0f);
-        // Bottom edges need to have the curves added too
-        // TODO: Change back after testing
-        float elevOffsetAngle = 10.553364148f / 2.0f;
-        for(int i = 3; i < 4; i++) {
-//        for(int i = 3; i < 6; i++) {
-            theta += M_PI_2f;
-            uint midpointIndex = vertices.size()/3;
-            uint indicesCounter = midpointIndex + 1;
-//            glm::vec3 midPoint = {midpoints[i * 3], midpoints[(i * 3) + 1], midpoints[(i * 3) + 2]};
-            glm::vec3 midPoint = {midpoints[0 * 3], midpoints[(0 * 3) + 1], midpoints[(0 * 3) + 2]};
-            vertices.insert(vertices.end(), {midPoint.x, midPoint.y, midPoint.z});
+            glm::vec3 offset;
+            glm::vec3 midPoint; 
             for(int j = 1; j < mResolution + 1; j++) {
                 float angle = qDegreesToRadians(90 - ((float) j * angleStep) - elevOffsetAngle);
                 float anglePrev = qDegreesToRadians(90 - ((float) (j - 1) * angleStep) - elevOffsetAngle);
@@ -131,6 +116,7 @@ private:
                     1.0f
                 };
 
+
                 glm::vec4 p2 = {
                     (mSideLength * sinf(anglePrev) * sinf(theta)),
                     (mSideLength * sinf(anglePrev) * cosf(theta)),
@@ -138,22 +124,57 @@ private:
                     1.0f
                 };
 
-                glm::quat q1(cosf(e_X / 2.0f), glm::normalize(glm::vec3(1.0f, 0.0f, 0.0f)) * sinf(e_X / 2.0f)); // X
-                glm::quat q2(cosf(e_Y / 2.0f), glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f)) * sinf(e_Y / 2.0f)); // Y
-                glm::quat q3(cosf(e_Z / 2.0f), glm::normalize(glm::vec3(0.0f, 0.0f, 1.0f)) * sinf(e_Z / 2.0f)); // Z
-                glm::mat4 m1 = glm::mat4_cast(q1);
-                glm::mat4 m2 = glm::mat4_cast(q2);
-                glm::mat4 m3 = glm::mat4_cast(q3);
-
-                p1 = m1 * m2 * m3 * p1;
-                p2 = m1 * m2 * m3 * p2;
+                if(j == 1) {
+                    offset = {
+                        (p2.x + midpoints[i * 3]) - vertices[(offsetVertexPos * 3)],
+                        (p2.y + midpoints[(i * 3) + 1]) - vertices[(offsetVertexPos * 3) + 1],
+                        (p2.z + midpoints[(i * 3) + 2]) - vertices[(offsetVertexPos * 3) + 2]
+                    };
+                    midpoints[i * 3] -= offset.x;
+                    midpoints[(i * 3) + 1] -= offset.y;
+                    midpoints[(i * 3) + 2] -= offset.z;
+                    midPoint = {midpoints[i * 3], midpoints[(i * 3) + 1], midpoints[(i * 3) + 2]};
+                    vertices.insert(vertices.end(), {midPoint.x, midPoint.y, midPoint.z});
+                }
                 vertices.insert(vertices.end(), {midPoint.x + p1.x, midPoint.y + p1.y, midPoint.z + p1.z});
+                if(j == (mResolution / 2)) {
+                    midpoints.insert(midpoints.end(), vertices.end() - 3, vertices.end());
+                }
                 vertices.insert(vertices.end(), {midPoint.x + p2.x, midPoint.y + p2.y, midPoint.z + p2.z});
-//                vertices.insert(vertices.end(), {p1.x, p1.y, p1.z});
-//                vertices.insert(vertices.end(), {p2.x, p2.y, p2.z});
                 indices.insert(indices.end(), {midpointIndex, indicesCounter, indicesCounter + 1});
                 indicesCounter += 2;
             }
+        }
+        // Bottom edges need to have the curves added too
+        for(int i = 3; i < 6; i++) {
+            uint midpointIndex = vertices.size()/3;
+            uint indicesCounter = midpointIndex + 1;
+            glm::vec3 midPoint = {midpoints[i * 3], midpoints[(i * 3) + 1], midpoints[(i * 3) + 2]};
+            vertices.insert(vertices.end(), {midPoint.x, midPoint.y, midPoint.z});
+            for(int j = 1; j < mResolution + 1; j++) {
+                float angle = qDegreesToRadians(90 - ((float) j * angleStep));
+                float anglePrev = qDegreesToRadians(90 - ((float) (j - 1) * angleStep));
+                float phi = (M_PI_2f / 3.0f);
+                glm::vec4 p1 = {
+                    (mSideLength * sinf(theta + angle) * cosf(phi)),
+                    (mSideLength * cosf(theta + angle) * cosf(phi)),
+                    (mSideLength * sinf(-phi)),
+                    1.0f
+                };
+
+                glm::vec4 p2 = {
+                    (mSideLength * sinf(theta + anglePrev) * cosf(phi)),
+                    (mSideLength * cosf(theta + anglePrev) * cosf(phi)),
+                    (mSideLength * sinf(-phi)),
+                    1.0f
+                };
+
+                vertices.insert(vertices.end(), {midPoint.x + p1.x, midPoint.y + p1.y, midPoint.z + p1.z});
+                vertices.insert(vertices.end(), {midPoint.x + p2.x, midPoint.y + p2.y, midPoint.z + p2.z});
+                indices.insert(indices.end(), {midpointIndex, indicesCounter, indicesCounter + 1});
+                indicesCounter += 2;
+            }
+            theta -= (2.0f * M_PIf) / 3.0f;
         }
     };
     std::vector<float> createMidpoint(int a, int b) {
