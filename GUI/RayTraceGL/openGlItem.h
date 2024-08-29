@@ -31,6 +31,7 @@ protected:
     glm::vec3 mPos;
     std::vector<float> vertices;
     std::vector<uint> indices;
+    glm::vec3 getPoint(int index);
 };
 
 #endif //OPENGLITEM_H

@@ -146,6 +146,13 @@ private:
             }
         }
         // Bottom edges need to have the curves added too
+        theta -= M_PI_2f;
+        float rotateBotAngle = 0.0f;
+        glm::vec3 c1 = getPoint(2);
+        glm::vec3 c2 = getPoint(3);
+        float s1 = c1.x;
+        float s2 = sqrt(powf(c2.x, 2) + powf(c2.z, 2));
+        float phi = -acosf((powf(mSideLength, 2) - powf(s1, 2) - powf(s2, 2)) / (-2 * s1 * s2)) / 2.0f;
         for(int i = 3; i < 6; i++) {
             uint midpointIndex = vertices.size()/3;
             uint indicesCounter = midpointIndex + 1;
@@ -154,27 +161,40 @@ private:
             for(int j = 1; j < mResolution + 1; j++) {
                 float angle = qDegreesToRadians(90 - ((float) j * angleStep));
                 float anglePrev = qDegreesToRadians(90 - ((float) (j - 1) * angleStep));
-                float phi = (M_PI_2f / 3.0f);
                 glm::vec4 p1 = {
-                    (mSideLength * sinf(theta + angle) * cosf(phi)),
-                    (mSideLength * cosf(theta + angle) * cosf(phi)),
-                    (mSideLength * sinf(-phi)),
+                    (mSideLength * cosf(theta + angle)),
+                    (mSideLength * sinf(theta + angle)),
+                    0.0f,
                     1.0f
                 };
 
                 glm::vec4 p2 = {
-                    (mSideLength * sinf(theta + anglePrev) * cosf(phi)),
-                    (mSideLength * cosf(theta + anglePrev) * cosf(phi)),
-                    (mSideLength * sinf(-phi)),
+                    (mSideLength * cosf(theta + anglePrev)),
+                    (mSideLength * sinf(theta + anglePrev)),
+                    0.0f,
                     1.0f
                 };
-
+                
+                glm::mat3 elevDrop = {
+                   cosf(phi),  0.0f, sinf(phi),
+                   0.0f,       1.0f, 0.0f,
+                   -sinf(phi), 0.0f, cosf(phi)
+                }; // Y-axis rotation to drop arc to meet bottom vertices
+                glm::mat3 rotateBot = {
+                    cosf(rotateBotAngle), -sinf(rotateBotAngle), 0.0f,
+                    sinf(rotateBotAngle), cosf(rotateBotAngle), 0.0f,
+                    0.0f, 0.0f, 1.0f
+                }; // Z-axis rotation to achieve the other two meeting vertices.
+                glm::mat4 xRotate = glm::mat4(elevDrop);
+                glm::mat4 zRotate = glm::mat4(rotateBot);
+                p1 = p1 * xRotate * zRotate;
+                p2 = p2 * xRotate * zRotate;
                 vertices.insert(vertices.end(), {midPoint.x + p1.x, midPoint.y + p1.y, midPoint.z + p1.z});
                 vertices.insert(vertices.end(), {midPoint.x + p2.x, midPoint.y + p2.y, midPoint.z + p2.z});
                 indices.insert(indices.end(), {midpointIndex, indicesCounter, indicesCounter + 1});
                 indicesCounter += 2;
             }
-            theta -= (2.0f * M_PIf) / 3.0f;
+            rotateBotAngle += (2.0f * M_PIf) / 3.0f;
         }
     };
     std::vector<float> createMidpoint(int a, int b) {
